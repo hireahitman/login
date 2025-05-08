@@ -4,15 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login To ShadowSpy Server</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-RXf+QSDCUQs6Bqj5xM5iXN1xwF1SshFv/2eWZJxQrVPhS4CZCzgWIK+vFfqYa9DlrxFGIj9R+Q3aDQXr0+bvEg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #0d1117;
       color: #c9d1d9;
       display: flex;
@@ -20,8 +17,7 @@
       align-items: center;
       height: 100vh;
     }
-
-    .login-container {
+    .container {
       background-color: #161b22;
       padding: 30px;
       border-radius: 12px;
@@ -29,56 +25,42 @@
       width: 100%;
       max-width: 400px;
     }
-
     .icon {
       text-align: center;
       font-size: 3rem;
       color: #00ff9f;
       margin-bottom: 20px;
     }
-
     h2 {
       text-align: center;
-      margin-bottom: 25px;
-      font-size: 1.5rem;
       color: #58a6ff;
     }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      border: 1px solid #30363d;
-      background-color: #0d1117;
-      color: #c9d1d9;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    button {
+    input, select, button {
       width: 100%;
       padding: 12px;
-      margin-top: 15px;
-      background-color: #007bff;
+      margin: 10px 0;
       border: none;
       border-radius: 8px;
       font-size: 1rem;
+    }
+    input, select {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+    }
+    button {
+      background-color: #007bff;
       color: white;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     .message {
-      margin-top: 15px;
       text-align: center;
+      margin-top: 15px;
       font-weight: bold;
-      font-size: 0.95rem;
     }
-
     .loader {
       border: 4px solid #1f1f1f;
       border-top: 4px solid #00ff9f;
@@ -89,46 +71,67 @@
       display: inline-block;
       margin-top: 10px;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
+    .hidden { display: none; }
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
     @media (max-width: 480px) {
-      .login-container {
-        margin: 0 15px;
-      }
+      .inline-fields { flex-direction: column; }
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="icon">
-      <i class="fa-solid fa-user-secret"></i>
-    </div>
+  <div class="container" id="loginPage">
+    <div class="icon"><i class="fa-solid fa-user-secret"></i></div>
     <h2>ShadowSpy Login</h2>
     <input type="text" id="server" placeholder="Enter ShadowSpy Server" />
     <input type="password" id="password" placeholder="Enter Server Password" />
     <button onclick="validateLogin()">Login</button>
-    <div id="message" class="message"></div>
+    <div class="message" id="loginMessage"></div>
+  </div>
+
+  <div class="container hidden" id="phonePage">
+    <div class="icon"><i class="fa-solid fa-user-secret"></i></div>
+    <h2>Enter Phone Number</h2>
+    <div class="inline-fields">
+      <select id="countryCode">
+        <option value="+1">🇺🇸 +1</option>
+        <option value="+44">🇬🇧 +44</option>
+        <option value="+91">🇮🇳 +91</option>
+        <option value="+81">🇯🇵 +81</option>
+        <option value="+49">🇩🇪 +49</option>
+        <option value="+33">🇫🇷 +33</option>
+        <option value="+39">🇮🇹 +39</option>
+        <option value="+86">🇨🇳 +86</option>
+        <option value="+7">🇷🇺 +7</option>
+        <option value="+234">🇳🇬 +234</option>
+        <!-- Add more countries as needed -->
+      </select>
+      <input type="text" placeholder="Enter Number Without Initial 0" />
+    </div>
   </div>
 
   <script>
     function validateLogin() {
       const server = document.getElementById("server").value.trim();
       const password = document.getElementById("password").value.trim();
-      const message = document.getElementById("message");
+      const message = document.getElementById("loginMessage");
 
       message.innerHTML = "";
 
       if (server === "dc7.shadowspy.ca" && password === "$75277$") {
-        message.innerHTML = `
-          <span style="color:#00ff00;">Connecting Securely To ShadowSpy App Server</span>
-          <div class="loader"></div>
-        `;
+        message.innerHTML = '<span style="color: #00ff00;">Connecting Securely To ShadowSpy App Server</span><div class="loader"></div>';
+        setTimeout(() => {
+          document.getElementById("loginPage").classList.add("hidden");
+          document.getElementById("phonePage").classList.remove("hidden");
+        }, 7000);
       } else {
-        message.innerHTML = `<span style="color:#ff4d4d;">Invalid access codes. Try again.</span>`;
+        message.innerHTML = '<span style="color: #ff4d4d;">Invalid access codes. Try again.</span>';
       }
     }
   </script>
